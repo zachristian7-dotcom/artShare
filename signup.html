@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArtShare — Create account</title><link rel="stylesheet" href="css/main.css">
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <a class="brand centered" href="index.html"><span class="brand-mark">A</span> ArtShare</a>
+    <h1>Join ArtShare.</h1><p>Make an account and start sharing.</p>
+    <form id="signupForm">
+      <label>Display name<input id="displayName" type="text" maxlength="40" required></label>
+      <label>Username<input id="username" type="text" maxlength="24" pattern="[A-Za-z0-9_]+" required></label>
+      <label>Email<input id="email" type="email" required></label>
+      <label>Password<input id="password" type="password" minlength="6" required></label>
+      <button class="primary-button full">Create account</button>
+      <p id="authStatus" class="status"></p>
+    </form>
+    <p class="auth-switch">Already have an account? <a href="login.html">Sign in</a></p>
+  </main>
+  <script type="module" src="js/auth.js"></script>
+</body>
+</html>

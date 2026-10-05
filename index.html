@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArtShare — Home</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <div id="app-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html"><span class="brand-mark">A</span> ArtShare</a>
+      <div class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Search art, artists, tags..."></div>
+      <nav class="top-actions">
+        <a href="explore.html">Explore</a>
+        <a href="create.html" class="create-button">＋ Create</a>
+        <a href="profile.html" id="profileLink">Profile</a>
+        <button id="logoutBtn" class="ghost-button">Log out</button>
+      </nav>
+    </header>
+
+    <main class="page feed-page">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">WELCOME TO ARTSHARE</p>
+          <h1>Share what you create.</h1>
+          <p class="hero-copy">A simple place for artists to post, discover, and talk about artwork.</p>
+        </div>
+        <a class="primary-button" href="create.html">Share artwork</a>
+      </section>
+
+      <div class="section-heading">
+        <div>
+          <h2>Your feed</h2>
+          <p id="feedStatus">Latest artwork from the community</p>
+        </div>
+      </div>
+      <section id="feed" class="post-grid"></section>
+    </main>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
