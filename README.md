@@ -1,46 +1,49 @@
-# ArtShare 2.0 Foundation
-
-A clean HTML/CSS/JavaScript foundation for rebuilding ArtShare.
+# ArtShare — Cloudinary build
 
 ## Stack
-- HTML
-- CSS
-- JavaScript ES modules
+- HTML/CSS/JavaScript only
+- Render static hosting
 - Firebase Authentication
 - Cloud Firestore
-- Firebase Storage
+- Cloudinary direct unsigned image uploads
 
-No framework is required.
+## Firebase
+The supplied Web App config is in `js/firebase.js`.
 
-## Setup
+In Firebase:
+1. Enable Authentication → Email/Password.
+2. Create Firestore.
+3. Publish `firestore.rules`.
+4. Add your Render hostname under Authentication → Settings → Authorized domains.
 
-1. Create a Firebase project.
-2. Enable Email/Password Authentication.
-3. Create a Firestore database.
-4. Enable Firebase Storage.
-5. Register a Web App in Firebase.
-6. Copy the web app config into `js/firebase.js`.
-7. Deploy `firestore.rules` and `storage.rules`.
-8. Serve the folder through a local/static web server. Do not open the HTML files directly with `file://`.
+Firebase Storage is not used.
 
-## Current foundation
+## Cloudinary
+Configured values:
+- Cloud name: `druqg4ncx`
+- Upload preset: `artshare_uploads`
 
-- Email/password signup
-- Email/password login
-- Logout
-- User profiles
-- Artwork upload
-- Firebase Storage image hosting
-- Firestore artwork posts
-- Home feed
-- Explore page foundation
-- Profile artwork grid
-- Individual post page
-- Tags stored with posts
-- Responsive layout
-- Centralized Firebase initialization
-- Basic security rules
+The preset must be unsigned. Recommended restrictions: JPG/JPEG/PNG/WebP and a sensible file-size limit.
+
+Never put a Cloudinary API Secret in browser JavaScript.
+
+## Render
+Static Site:
+- Branch: `main`
+- Root Directory: blank
+- Build Command: blank
+- Publish Directory: `.`
+- Auto Deploy: Yes
+
+### Render environment variables
+**None are required for the current frontend-only architecture.**
+
+Firebase Web config and Cloudinary cloud name/unsigned preset are client-side configuration. A future backend would keep `CLOUDINARY_API_SECRET` in server environment variables.
+
+## Local testing
+Use a local HTTP server instead of opening HTML directly:
+`python3 -m http.server 8000`
+Then open `http://localhost:8000`.
 
 ## Important
-
-The rules are a foundation, not the final production moderation/security model. Before public launch we should add validation for post fields, rate limiting/abuse controls, reports, moderation, comment validation, follows, notifications, and stronger Storage validation.
+If Firebase still reports `auth/api-key-not-valid`, verify the Web App config in Firebase Project Settings → General → Your apps and make sure the API key belongs to project `artshare07`.
