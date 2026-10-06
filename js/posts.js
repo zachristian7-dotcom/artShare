@@ -1,55 +1,7 @@
-import { auth, db, storage } from "./firebase.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
-import { addDoc, collection, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-
-const file = document.getElementById("imageFile");
-const preview = document.getElementById("preview");
-file?.addEventListener("change", () => {
-  const f = file.files?.[0]; if (!f) return;
-  const url = URL.createObjectURL(f);
-  preview.innerHTML = `<img src="${url}" alt="Preview">`;
-});
-
-document.getElementById("createPostForm")?.addEventListener("submit", async e => {
-  e.preventDefault();
-  const status = document.getElementById("formStatus");
-  const user = auth.currentUser;
-  if (!user) return;
-  const image = file.files?.[0];
-  if (!image) return;
-  try {
-    status.textContent = "Uploading artwork...";
-    const storageRef = ref(storage, `posts/${user.uid}/${crypto.randomUUID()}-${image.name}`);
-    await uploadBytes(storageRef, image, {contentType:image.type});
-    const imageUrl = await getDownloadURL(storageRef);
-    const userSnap = await getDoc(doc(db, "users", user.uid));
-    const profile = userSnap.exists() ? userSnap.data() : {};
-    await addDoc(collection(db, "posts"), {
-      uid:user.uid, username:profile.username || "artist",
-      title:document.getElementById("title").value.trim(),
-      description:document.getElementById("description").value.trim(),
-      tags:document.getElementById("tags").value.split(",").map(x=>x.trim().toLowerCase()).filter(Boolean),
-      imageUrl, likes:0, createdAt:serverTimestamp()
-    });
-    location.href = "index.html";
-  } catch(err) {
-    console.error(err); status.textContent = err.message;
-  }
-});
-
-const params = new URLSearchParams(location.search);
-const postId = params.get("id");
-const postView = document.getElementById("postView");
-if (postId && postView) {
-  const snap = await getDoc(doc(db, "posts", postId));
-  if (!snap.exists()) { postView.innerHTML = `<div class="empty">Post not found.</div>`; }
-  else {
-    const p = {id:snap.id,...snap.data()};
-    postView.innerHTML = `<article class="single-post">
-      <img src="${p.imageUrl}" alt="${p.title}">
-      <div class="single-post-body"><p class="eyebrow">@${p.username || "artist"}</p>
-      <h1>${p.title}</h1><p>${p.description || ""}</p>
-      <p class="post-meta">${(p.tags||[]).map(t=>"#"+t).join(" ")}</p></div>
-    </article>`;
-  }
-}
+import{auth,db}from"./firebase.js";import{uploadImage}from"./cloudinary.js";import{addDoc,collection,getDoc,getDocs,doc,limit,orderBy,query,serverTimestamp}from"https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+const form=document.querySelector("#postForm"),status=document.querySelector("#status"),image=document.querySelector("#image"),preview=document.querySelector("#preview"),wrap=document.querySelector("#previewWrap");const show=m=>{if(status)status.textContent=m};
+image?.addEventListener("change",()=>{const f=image.files?.[0];if(f){preview.src=URL.createObjectURL(f);wrap.classList.remove("hidden")}});
+form?.addEventListener("submit",async e=>{e.preventDefault();if(!auth.currentUser){location.href="./login.html";return}const f=image.files?.[0];if(!f)return show("Choose an image first.");try{form.querySelector("button").disabled=true;show("Uploading artwork…");const u=await uploadImage(f);show("Publishing post…");await addDoc(collection(db,"posts"),{uid:auth.currentUser.uid,username:auth.currentUser.displayName||"Artist",title:form.title.value.trim(),description:form.description.value.trim(),tags:form.tags.value.split(",").map(x=>x.trim().toLowerCase()).filter(Boolean).slice(0,20),imageUrl:u.url,cloudinaryPublicId:u.publicId,width:u.width,height:u.height,format:u.format,bytes:u.bytes,likes:0,createdAt:serverTimestamp()});location.href="./explore.html"}catch(x){console.error(x);show(x.message||"Could not publish the post.");form.querySelector("button").disabled=false}});
+async function feed(){const el=document.querySelector("#feed");if(!el)return;try{const s=await getDocs(query(collection(db,"posts"),orderBy("createdAt","desc"),limit(30)));el.innerHTML="";s.forEach(x=>{const p=x.data(),a=document.createElement("article");a.className="post-card";a.innerHTML=`<a href="./post.html?id=${encodeURIComponent(x.id)}"><img src="${esc(p.imageUrl)}" alt="${esc(p.title||"Artwork")}"></a><div class="body"><h3>${esc(p.title||"Untitled")}</h3><p>by ${esc(p.username||"Artist")}</p>${(p.tags||[]).slice(0,5).map(t=>`<span class="tag">#${esc(t)}</span>`).join("")}</div>`;el.appendChild(a)});if(!s.size)show("No posts yet. Be the first to publish something!")}catch(x){show("Could not load the feed. Check Firestore rules/indexes.")}}
+async function single(){const el=document.querySelector("#post");if(!el)return;const id=new URLSearchParams(location.search).get("id");if(!id)return;try{const s=await getDoc(doc(db,"posts",id));if(!s.exists()){el.innerHTML="<p>Post not found.</p>";return}const p=s.data();el.innerHTML=`<img src="${esc(p.imageUrl)}" alt="${esc(p.title)}" style="width:100%;max-height:700px;object-fit:contain;border-radius:12px"><div style="padding-top:20px"><p class="eyebrow">ARTWORK</p><h1>${esc(p.title||"Untitled")}</h1><p class="muted">by ${esc(p.username||"Artist")}</p><p>${esc(p.description||"")}</p>${(p.tags||[]).map(t=>`<span class="tag">#${esc(t)}</span>`).join("")}</div>`}catch(x){el.innerHTML=`<p>${esc(x.message)}</p>`}}
+function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}if(document.querySelector("#feed"))feed();if(document.querySelector("#post"))single();

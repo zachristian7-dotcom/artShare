@@ -1,27 +1,3 @@
-import { auth, db } from "./firebase.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-
-const status = document.getElementById("authStatus");
-const say = msg => { if(status) status.textContent = msg; };
-
-document.getElementById("loginForm")?.addEventListener("submit", async e => {
-  e.preventDefault(); say("Signing in...");
-  try {
-    await signInWithEmailAndPassword(auth, email.value, password.value);
-    location.href = "index.html";
-  } catch(err) { say(err.message.replace("Firebase: ","")); }
-});
-
-document.getElementById("signupForm")?.addEventListener("submit", async e => {
-  e.preventDefault(); say("Creating account...");
-  try {
-    const cred = await createUserWithEmailAndPassword(auth, email.value, password.value);
-    await setDoc(doc(db, "users", cred.user.uid), {
-      uid: cred.user.uid, displayName: displayName.value.trim(),
-      username: username.value.trim().toLowerCase(), email: email.value.trim(),
-      bio: "", avatarUrl: "", createdAt: serverTimestamp()
-    });
-    location.href = "index.html";
-  } catch(err) { say(err.message.replace("Firebase: ","")); }
-});
+import{auth,db}from"./firebase.js";import{createUserWithEmailAndPassword,signInWithEmailAndPassword,updateProfile}from"https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";import{doc,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";const status=document.querySelector("#status");const show=m=>{if(status)status.textContent=m};
+document.querySelector("#loginForm")?.addEventListener("submit",async e=>{e.preventDefault();show("Logging in…");try{await signInWithEmailAndPassword(auth,e.target.email.value.trim(),e.target.password.value);location.href="./explore.html"}catch(x){show(x.message)}});
+document.querySelector("#signupForm")?.addEventListener("submit",async e=>{e.preventDefault();show("Creating your account…");try{const username=e.target.username.value.trim(),email=e.target.email.value.trim(),c=await createUserWithEmailAndPassword(auth,email,e.target.password.value);await updateProfile(c.user,{displayName:username});await setDoc(doc(db,"users",c.user.uid),{uid:c.user.uid,username,bio:"",createdAt:serverTimestamp()});location.href="./profile.html"}catch(x){show(x.message)}});
