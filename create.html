@@ -1,1 +1,15 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Create • ArtShare</title><link rel="stylesheet" href="./css/main.css"></head><body><header class="topbar"><a class="brand" href="./index.html">ArtShare</a><nav><a href="./explore.html">Explore</a><a href="./create.html">Create</a><a href="./profile.html">Profile</a></nav></header><main class="container narrow"><section class="card"><p class="eyebrow">CREATE</p><h1>Post your artwork</h1><form id="postForm"><label>Artwork<input id="image" type="file" accept="image/jpeg,image/png,image/webp" required></label><div id="previewWrap" class="preview-wrap hidden"><img id="preview" alt="Artwork preview"></div><label>Title<input id="title" maxlength="120" required></label><label>Description<textarea id="description" maxlength="2000" rows="5"></textarea></label><label>Tags <span class="muted">(comma separated)</span><input id="tags" maxlength="300" placeholder="digital, character, fanart"></label><button class="button primary">Publish</button></form><p id="status" class="status"></p></section></main><script type="module" src="./js/posts.js"></script></body></html>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create • ArtShare</title><link rel="stylesheet" href="./css/main.css?v=3"></head>
+<body><header class="topbar"><a class="brand" href="./index.html">ArtShare</a>
+<nav class="nav"><a href="./explore.html">Explore</a><a class="active" href="./create.html">Create</a><a href="./profile.html">Profile</a></nav>
+<div class="nav-right" id="userArea"></div></header>
+<main class="container"><section class="card form-card"><p class="eyebrow">CREATE</p><h1>Post your artwork</h1>
+<form id="postForm">
+<div class="form-group"><label for="image">Artwork</label><input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" required></div>
+<div id="previewWrap" class="hidden"><img id="preview" class="preview" alt="Artwork preview"></div>
+<div class="form-group"><label for="title">Title</label><input id="title" name="title" maxlength="120" required></div>
+<div class="form-group"><label for="description">Description</label><textarea id="description" name="description" maxlength="2000" rows="5"></textarea></div>
+<div class="form-group"><label for="tags">Tags <span class="muted">(comma separated)</span></label><input id="tags" name="tags" maxlength="300" placeholder="digital, character, fanart"></div>
+<button class="btn primary" type="submit">Publish</button></form><p id="status" class="status"></p></section></main>
+<script type="module" src="./js/posts.js"></script></body></html>

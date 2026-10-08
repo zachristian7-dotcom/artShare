@@ -1,1 +1,9 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign up • ArtShare</title><link rel="stylesheet" href="./css/main.css"></head><body><main class="auth-shell"><section class="card auth-card"><a class="brand" href="./index.html">ArtShare</a><h1>Create your account</h1><form id="signupForm"><label>Username<input id="username" minlength="3" maxlength="24" required></label><label>Email<input id="email" type="email" required></label><label>Password<input id="password" type="password" minlength="6" required></label><button class="button primary">Create account</button></form><p id="status" class="status"></p><p>Already have an account? <a href="./login.html">Log in</a></p></section></main><script type="module" src="./js/auth.js"></script></body></html>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign up • ArtShare</title><link rel="stylesheet" href="./css/main.css?v=3"></head>
+<body><main class="auth-shell"><section class="card auth-card form-card"><a class="brand" href="./index.html">ArtShare</a><p class="eyebrow">JOIN ARTSHARE</p><h1>Create your account</h1>
+<form id="signupForm"><div class="form-group"><label for="username">Username</label><input id="username" name="username" minlength="3" maxlength="24" required></div>
+<div class="form-group"><label for="email">Email</label><input id="email" name="email" type="email" required></div>
+<div class="form-group"><label for="password">Password</label><input id="password" name="password" type="password" minlength="6" required></div>
+<button class="btn primary" type="submit">Create account</button></form><p id="status" class="status"></p><p>Already have an account? <a href="./login.html">Log in</a></p></section></main>
+<script type="module" src="./js/auth.js"></script></body></html>
